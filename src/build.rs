@@ -1,7 +1,7 @@
 use std::{
     env, fmt, fs,
     fs::File,
-    path::{Path, PathBuf, MAIN_SEPARATOR}
+    path::{Path, PathBuf, MAIN_SEPARATOR},
 };
 
 const DRIVER_VERSION: &str = "1.24.0-alpha-jun-28-2022";
@@ -72,7 +72,9 @@ fn check_size(p: &Path) {
 
 // No network access
 #[cfg(feature = "only-for-docs-rs")]
-fn download(_url: &str, dest: &Path) { File::create(dest).unwrap(); }
+fn download(_url: &str, dest: &Path) {
+    File::create(dest).unwrap();
+}
 
 fn url(platform: PlaywrightPlatform) -> String {
     // let next = DRIVER_VERSION
@@ -80,6 +82,7 @@ fn url(platform: PlaywrightPlatform) -> String {
     //    .then(|| "/next")
     //    .unwrap_or_default();
     let next = "/next";
+
     format!(
         "https://playwright.azureedge.net/builds/driver{}/playwright-{}-{}.zip",
         next, DRIVER_VERSION, platform
@@ -91,7 +94,7 @@ enum PlaywrightPlatform {
     Linux,
     Win32,
     Win32x64,
-    Mac
+    Mac,
 }
 
 impl fmt::Display for PlaywrightPlatform {
@@ -100,7 +103,7 @@ impl fmt::Display for PlaywrightPlatform {
             Self::Linux => write!(f, "linux"),
             Self::Win32 => write!(f, "win32"),
             Self::Win32x64 => write!(f, "win32_x64"),
-            Self::Mac => write!(f, "mac")
+            Self::Mac => write!(f, "mac"),
         }
     }
 }
@@ -110,7 +113,7 @@ impl Default for PlaywrightPlatform {
         match env::var("CARGO_CFG_TARGET_OS").as_deref() {
             Ok("linux") => return PlaywrightPlatform::Linux,
             Ok("macos") => return PlaywrightPlatform::Mac,
-            _ => ()
+            _ => (),
         };
         if env::var("CARGO_CFG_WINDOWS").is_ok() {
             if env::var("CARGO_CFG_TARGET_POINTER_WIDTH").as_deref() == Ok("64") {
